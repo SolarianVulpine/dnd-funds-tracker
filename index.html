@@ -18,26 +18,26 @@
             },
             colors: {
               primary: {
-                light: "#a78bfa", // lighter purple
-                DEFAULT: "#8b5cf6", // purple-600
-                dark: "#6d28d9", // darker purple
+                light: "#a78bfa",
+                DEFAULT: "#8b5cf6",
+                dark: "#6d28d9",
               },
               secondary: {
-                light: "#fde047", // lighter yellow
-                DEFAULT: "#facc15", // yellow-400
-                dark: "#eab308", // darker yellow/gold
+                light: "#fde047",
+                DEFAULT: "#facc15",
+                dark: "#eab308",
               },
-              background: "#111827", // slate-900
-              surface: "#1f2937", // slate-800
-              surfaceContent: "#374151", // slate-700
-              textPrimary: "#f3f4f6", // slate-100
-              textSecondary: "#9ca3af", // slate-400
-              danger: "#ef4444", // red-500
-              success: "#22c55e", // green-500
+              background: "#111827",
+              surface: "#1f2937",
+              surfaceContent: "#374151",
+              textPrimary: "#f3f4f6",
+              textSecondary: "#9ca3af",
+              danger: "#ef4444",
+              success: "#22c55e",
             },
             boxShadow: {
               input:
-                "0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(139, 92, 246, 0.5)", // Subtle glow for inputs
+                "0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(139, 92, 246, 0.5)",
               button:
                 "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(139, 92, 246, 0.7)",
             },
@@ -90,6 +90,20 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+
+      /* Reusable input style */
+      .input-style {
+        @apply w-full p-3 bg-surfaceContent border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-shadow shadow-input text-textPrimary placeholder-gray-500;
+      }
+
+      /* Reusable button style */
+      .button-primary {
+        @apply w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg shadow-button hover:shadow-lg transition-all duration-150 ease-in-out;
+      }
+
+      .button-secondary {
+        @apply w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors;
+      }
     </style>
   </head>
   <body
@@ -104,6 +118,114 @@
           Manage your party's treasure with ease.
         </p>
       </header>
+
+      <section
+        id="authSection"
+        class="mb-8 p-6 bg-surface rounded-xl shadow-lg"
+      >
+        <h2 class="text-2xl font-semibold mb-4 text-primary-light">
+          Authentication
+        </h2>
+
+        <form id="registrationForm" class="space-y-4 hidden">
+          <div>
+            <label
+              for="registerUsername"
+              class="block text-sm font-medium text-textSecondary mb-1"
+              >Username:</label
+            >
+            <input
+              type="text"
+              id="registerUsername"
+              placeholder="Choose a username"
+              class="input-style"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="registerEmail"
+              class="block text-sm font-medium text-textSecondary mb-1"
+              >Email:</label
+            >
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="Your email address"
+              class="input-style"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="registerPassword"
+              class="block text-sm font-medium text-textSecondary mb-1"
+              >Password:</label
+            >
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Create a password"
+              class="input-style"
+              required
+            />
+          </div>
+          <button id="submitCreateAccount" type="submit" class="button-primary">
+            Create Account
+          </button>
+          <button
+            id="cancelCreateAccount"
+            type="button"
+            class="button-secondary"
+          >
+            Cancel
+          </button>
+        </form>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label
+              for="loginEmail"
+              class="block text-sm font-medium text-textSecondary mb-1"
+              >Email:</label
+            >
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Your email address"
+              class="input-style"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="loginPassword"
+              class="block text-sm font-medium text-textSecondary mb-1"
+              >Password:</label
+            >
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Your password"
+              class="input-style"
+              required
+            />
+          </div>
+          <button id="submitLogin" type="submit" class="button-primary">
+            Login
+          </button>
+          <button id="cancelLogin" type="button" class="button-secondary">
+            Cancel
+          </button>
+        </form>
+
+        <div id="accountStatus" class="mt-4 text-center text-textSecondary">
+          Don't have an account?
+          <button id="showCreateAccount" class="text-primary">
+            Create Account
+          </button>
+        </div>
+      </section>
 
       <section
         id="partySetupSection"
@@ -123,13 +245,10 @@
               type="text"
               id="partyNameInput"
               placeholder="e.g., The Crimson Blades"
-              class="w-full p-3 bg-surfaceContent border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-shadow shadow-input text-textPrimary placeholder-gray-500"
+              class="input-style"
             />
           </div>
-          <button
-            id="createPartyButton"
-            class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg shadow-button hover:shadow-lg transition-all duration-150 ease-in-out"
-          >
+          <button id="createPartyButton" class="button-primary sm:w-auto">
             Create/Load Party
           </button>
         </div>
@@ -196,13 +315,10 @@
                   type="text"
                   id="memberNameInput"
                   placeholder="e.g., Elara Meadowlight"
-                  class="w-full p-3 bg-background border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-shadow shadow-input text-textPrimary placeholder-gray-500"
+                  class="input-style"
                 />
               </div>
-              <button
-                id="addMemberButton"
-                class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg shadow-button hover:shadow-lg transition-all duration-150 ease-in-out"
-              >
+              <button id="addMemberButton" class="button-primary sm:w-auto">
                 Add Member
               </button>
             </div>
@@ -218,9 +334,7 @@
             Transaction History
           </h2>
           <div class="space-y-4">
-            <div id="transactionHistoryList" class="space-y-4">
-              <!-- Transactions will be dynamically added here -->
-            </div>
+            <div id="transactionHistoryList" class="space-y-4"></div>
           </div>
         </section>
       </main>
@@ -245,10 +359,7 @@
                 class="block text-sm font-medium text-textSecondary mb-1"
                 >Transaction Type:</label
               >
-              <select
-                id="transactionType"
-                class="w-full p-3 bg-surfaceContent border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-textPrimary"
-              ></select>
+              <select id="transactionType" class="input-style"></select>
             </div>
 
             <div id="memberSelectGroup" class="hidden">
@@ -257,10 +368,7 @@
                 class="block text-sm font-medium text-textSecondary mb-1"
                 >Select Member:</label
               >
-              <select
-                id="memberSelect"
-                class="w-full p-3 bg-surfaceContent border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-textPrimary"
-              ></select>
+              <select id="memberSelect" class="input-style"></select>
             </div>
 
             <div id="toMemberSelectGroup" class="hidden">
@@ -269,10 +377,7 @@
                 class="block text-sm font-medium text-textSecondary mb-1"
                 >To Member:</label
               >
-              <select
-                id="toMemberSelect"
-                class="w-full p-3 bg-surfaceContent border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-textPrimary"
-              ></select>
+              <select id="toMemberSelect" class="input-style"></select>
             </div>
 
             <p class="text-sm text-textSecondary">Enter amount to transfer:</p>
@@ -362,14 +467,14 @@
               <button
                 type="button"
                 id="cancelTransactionButton"
-                class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-5 rounded-lg transition-colors"
+                class="button-secondary"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 id="confirmTransactionButton"
-                class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-5 rounded-lg shadow-button hover:shadow-lg transition-all"
+                class="button-primary"
               >
                 Confirm
               </button>
