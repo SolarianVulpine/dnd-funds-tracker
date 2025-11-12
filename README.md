@@ -57,6 +57,24 @@ The user interface will be built with several key components:
 
 State Management will be handled using React's built-in hooks like `useState` for simple component-level state. The UI will be styled using a framework like Bootstrap or Tailwind CSS.
 
+### Development Progress
+
+**Milestone 1: Core Logic and Initial UI**
+
+- **Data Models Created**: Defined TypeScript interfaces for `Currency`, `PartyMember`, and `Party` to create a strong data structure.
+- **Currency Utility Function**: Implemented a robust `transferCurrency` function in `src/utils/currency.ts`. This function safely handles transfers between wallets and includes validation to prevent negative balances.
+- **React App Setup**:
+  - Initialized the main `App` component in `src/index.tsx`.
+  - Created sample data for a starting party.
+  - Used the `useState` hook to manage the entire party object as the application's state.
+- **Dynamic UI Rendering**:
+  - The `App` component now dynamically renders the party name, the treasury contents, and a list of all party members with their individual wallets.
+  - Used the `.map()` method to iterate over arrays and objects to generate JSX, a core pattern in React development.
+- **State Update Demonstration**:
+  - Added a test button and an event handler (`handleTestTransfer`) to demonstrate a state update.
+  - Clicking the button uses the `transferCurrency` utility to move funds and then calls `setParty` with a new, updated party object to trigger a re-render. This successfully demonstrates the full state management loop.
+- **Development Server**: Learned how to run the Vite development server with `npm run dev` to view and test the application in a browser.
+
 ### Currency Rates
 
 > 1 Platinum piece (Pp) is equal to
