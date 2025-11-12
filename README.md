@@ -26,4 +26,12 @@ For now I'll be constructing something very basic using React and Typescript.
 #### Front-End (React)
 - Components for LoginForm, AccountBalance, TransactionForm, and TransactionHistory
 - State Management: `useState` for most simple components
-- User Interface (UI): I expect to use bootstrap or tailwind to design the layout of the site. 
+- User Interface (UI): I expect to use bootstrap or tailwind to design the layout of the site. With JSX handling component functionality
+- Data Handling: This is an extremely simple numbers exchange.
+
+### Currency Rates
+> 1 Platinum piece (Pp) is equal to
+- 10 Gold Pieces (Gp)
+- 20 Electrum Pieces (Ep)
+- 100 Silver Pieces (Sp)
+- 1000 Copper pieces (Cp)
