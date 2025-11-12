@@ -14,7 +14,16 @@ with the party member associated with the exchange, for tracking purposes.
 
 Inspired by multi-user campaign managment sites like [DndBeyond](https://www.dndbeyond.com/) and [Scabard](https://www.scabard.com/pbs/), users will be
 able to create their party and add members. The individual party members will be eligable for claim by another user but would also be trackable without an
-active claim being necessary (let's assume the party manager—treasurer?—retains
+active claim being necessary (let's assume the party manager — treasurer? — retains
 custody of unclaimed party members until otherwise handled).
 
 To keep track of users and their actions I'll need authentication and profile handling. I'm looking into using **Google Cloud** services for managing such things on the backend.
+
+For now I'll be constructing something very basic using React and Typescript.
+
+### Necessary Functionality
+
+#### Front-End (React)
+- Components for LoginForm, AccountBalance, TransactionForm, and TransactionHistory
+- State Management: `useState` for most simple components
+- User Interface (UI): I expect to use bootstrap or tailwind to design the layout of the site. 
