@@ -1,0 +1,10 @@
+{
+  "name": "WD2100 Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+  "runArgs": ["--sysctl", "net.ipv6.conf.all.disable_ipv6=1"],
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+    }
+  }
+}
