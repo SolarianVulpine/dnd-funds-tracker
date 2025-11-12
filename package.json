@@ -8,15 +8,22 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier \"src/**/*.{js,jsx,ts,tsx}\" --write"
+    "format": "prettier \"src/**/*.{js,jsx,ts,tsx}\" --write",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "9.39.1",
     "@vitejs/plugin-react": "5.1.1",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "eslint-plugin-react-refresh": "0.4.24",
+    "globals": "16.5.0",
     "prettier": "3.6.2",
+    "typescript-eslint": "8.46.4",
     "vite": "7.2.2"
   },
   "dependencies": {
