@@ -5,3 +5,4 @@ export interface Currency {
         silver: number;
         copper: number;
 }
+
