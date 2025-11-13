@@ -32,7 +32,23 @@ export function App() {
   };
   const [party, setParty] = useState(initialParty);
 
-  function handleTestTransfer() {
+  function handleSubmitTransaction(formData: FormData) {
+    const fromWalletId = formData.get("fromWallet") as string;
+    const toWalletId = formData.get("toWallet") as string;
+    const amount: Currency = {
+      platinum: Number(formData.get("platinum")),
+      gold: Number(formData.get("gold")),
+      electrum: Number(formData.get("electrum")),
+      silver: Number(formData.get("silver")),
+      copper: Number(formData.get("copper")),
+    };
+
+    if (fromWalletId === toWalletId) {
+      alert("You cannot transfer to the same wallet.");
+      return;
+    }
+
+    // 1. Deep Copy
     const newParty = {
       ...party,
       treasury: { ...party.treasury },
@@ -42,18 +58,36 @@ export function App() {
       })),
     };
 
-    const amountToTransfer = { platinum: 0, gold: 10, electrum: 0, silver: 0, copper: 0 };
+    // 2. Find the actual wallet OBJECTS
+    let fromWallet: Currency | undefined;
+    if (fromWalletId === "treasury") {
+      fromWallet = newParty.treasury;
+    } else {
+      fromWallet = newParty.members.find((m) => m.id === fromWalletId)?.wallet;
+    }
 
-    const targetMember = newParty.members.find((m) => m.id === "member-1");
+    // Now do the same for the 'to' wallet
+    let toWallet: Currency | undefined;
+    if (toWalletId === "treasury") {
+      toWallet = newParty.treasury;
+    } else {
+      toWallet = newParty.members.find((m) => m.id === toWalletId)?.wallet;
+    }
 
-    if (targetMember) {
-      const success = transferCurrency(newParty.treasury, targetMember.wallet, amountToTransfer);
+    // 3. Make sure both wallets were found
+    if (!fromWallet || !toWallet) {
+      alert("Error: Could not find one of the wallets.");
+      return;
+    }
 
-      if (success) {
-        setParty(newParty);
-      } else {
-        alert("Transfer failed: Insufficient funds!");
-      }
+    // 4. Execute the transfer
+    const success = transferCurrency(fromWallet, toWallet, amount);
+
+    // 5. Update the state
+    if (success) {
+      setParty(newParty);
+    } else {
+      alert("Transfer failed! Insufficient funds.");
     }
   }
 
@@ -84,9 +118,10 @@ export function App() {
           </li>
         ))}
       </ul>
-      <button onClick={handleTestTransfer}>
-        Transfer 10 Gold to Boric
-      </button>
+      <TransactionForm
+        members={party.members}
+        onSubmitTransaction={handleSubmitTransaction}
+      />
     </div>
   );
 }

@@ -75,6 +75,25 @@ State Management will be handled using React's built-in hooks like `useState` fo
   - Clicking the button uses the `transferCurrency` utility to move funds and then calls `setParty` with a new, updated party object to trigger a re-render. This successfully demonstrates the full state management loop.
 - **Development Server**: Learned how to run the Vite development server with `npm run dev` to view and test the application in a browser.
 
+**Milestone 2: Building the Transaction Form**
+
+- **Component Creation**: Created a new, reusable `TransactionForm` component in `src/components/TransactionForm.tsx`.
+- **Dynamic Form Content**: The form is not static; it accepts the list of party members via `props` and uses this data to dynamically generate "To" and "From" dropdown menus. This makes the form adaptable to any party size.
+- **Controlled Form Submission**: Implemented a `handleSubmit` function that prevents the default browser refresh and captures all user input using the `FormData` API.
+- **Lifting State Up**: Established a robust communication channel between the child `TransactionForm` and the parent `App` component.
+  - A handler function (`handleSubmitTransaction`) was created in `App` to process the form data.
+  - This function is passed down to `TransactionForm` as a prop (`onSubmitTransaction`).
+  - When the form is submitted, it calls the function from its props, effectively "lifting" the form data up to the parent component where the application state lives. This is a critical pattern for managing state in React.
+- **Edge Case Validation**: Identified and planned for the edge case where a user might try to transfer funds to and from the same wallet, ensuring more robust application logic.
+
+**Milestone 3: Implementing Full Transaction Logic**
+
+- **Completed State Logic**: The `handleSubmitTransaction` function in `App.tsx` has been fully implemented. It now serves as the central processing unit for all transactions.
+- **Dynamic Wallet Selection**: The function correctly interprets the string IDs from the form's dropdowns to identify the appropriate source and destination wallets, whether it's the party treasury or a specific member's wallet.
+- **Robust Validation**: Implemented crucial validation checks within the handler, including preventing transfers to the same wallet and ensuring both source and destination wallets are found before attempting a transaction.
+- **Final State Update**: The handler now successfully uses the `transferCurrency` utility and, upon a successful transfer, updates the entire application state by calling `setParty` with the new party object. This makes the form fully interactive.
+- **Code Cleanup**: The original `handleTestTransfer` function and its corresponding button have been removed, as their functionality is now fully replaced by the complete `TransactionForm`. The `TransactionForm` component itself was also cleaned up to remove redundant logic.
+
 ### Currency Rates
 
 > 1 Platinum piece (Pp) is equal to
