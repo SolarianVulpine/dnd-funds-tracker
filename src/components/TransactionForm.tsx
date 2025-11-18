@@ -25,6 +25,7 @@ export function TransactionForm({
   const copperInputId = useId();
   return (
     <form onSubmit={handleSubmit}>
+      <input type="hidden" name="transactionType" value={transactionType} />
       <h3>New Transaction</h3>
       <div>
         <button type="button" onClick={() => setTransactionType("transfer")}>
