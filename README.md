@@ -21,6 +21,19 @@ To keep track of users and their actions I'll need authentication and profile ha
 
 For now I'll be constructing something very basic using React and Typescript.
 
+<details>
+<summary>Coin Conversion Rate</summary>
+
+### Currency Rates
+
+> 1 Platinum piece (Pp) is equal to
+
+- 10 Gold Pieces (Gp)
+- 20 Electrum Pieces (Ep)
+- 100 Silver Pieces (Sp)
+- 1000 Copper pieces (Cp)
+</details>
+
 ### Data Models
 
 The core data structure of the application is defined by the following TypeScript interfaces:
@@ -59,7 +72,9 @@ State Management will be handled using React's built-in hooks like `useState` fo
 
 ### Development Progress
 
-**Milestone 1: Core Logic and Initial UI**
+<details>
+
+<summary><b>Milestone 1: Core Logic and Initial UI</b></summary>
 
 - **Data Models Created**: Defined TypeScript interfaces for `Currency`, `PartyMember`, and `Party` to create a strong data structure.
 - **Currency Utility Function**: Implemented a robust `transferCurrency` function in `src/utils/currency.ts`. This function safely handles transfers between wallets and includes validation to prevent negative balances.
@@ -74,8 +89,11 @@ State Management will be handled using React's built-in hooks like `useState` fo
   - Added a test button and an event handler (`handleTestTransfer`) to demonstrate a state update.
   - Clicking the button uses the `transferCurrency` utility to move funds and then calls `setParty` with a new, updated party object to trigger a re-render. This successfully demonstrates the full state management loop.
 - **Development Server**: Learned how to run the Vite development server with `npm run dev` to view and test the application in a browser.
+</details>
 
-**Milestone 2: Building the Transaction Form**
+<details>
+
+<summary><b>Milestone 2: Building the Transaction Form</b></summary>
 
 - **Component Creation**: Created a new, reusable `TransactionForm` component in `src/components/TransactionForm.tsx`.
 - **Dynamic Form Content**: The form is not static; it accepts the list of party members via `props` and uses this data to dynamically generate "To" and "From" dropdown menus. This makes the form adaptable to any party size.
@@ -85,8 +103,11 @@ State Management will be handled using React's built-in hooks like `useState` fo
   - This function is passed down to `TransactionForm` as a prop (`onSubmitTransaction`).
   - When the form is submitted, it calls the function from its props, effectively "lifting" the form data up to the parent component where the application state lives. This is a critical pattern for managing state in React.
 - **Edge Case Validation**: Identified and planned for the edge case where a user might try to transfer funds to and from the same wallet, ensuring more robust application logic.
+</details>
 
-**Milestone 3: Implementing Full Transaction Logic**
+<details>
+
+<summary><b>Milestone 3: Implementing Full Transaction Logic</b></summary>
 
 - **Completed State Logic**: The `handleSubmitTransaction` function in `App.tsx` has been fully implemented. It now serves as the central processing unit for all transactions.
 - **Dynamic Wallet Selection**: The function correctly interprets the string IDs from the form's dropdowns to identify the appropriate source and destination wallets, whether it's the party treasury or a specific member's wallet.
@@ -94,11 +115,4 @@ State Management will be handled using React's built-in hooks like `useState` fo
 - **Final State Update**: The handler now successfully uses the `transferCurrency` utility and, upon a successful transfer, updates the entire application state by calling `setParty` with the new party object. This makes the form fully interactive.
 - **Code Cleanup**: The original `handleTestTransfer` function and its corresponding button have been removed, as their functionality is now fully replaced by the complete `TransactionForm`. The `TransactionForm` component itself was also cleaned up to remove redundant logic.
 
-### Currency Rates
-
-> 1 Platinum piece (Pp) is equal to
-
-- 10 Gold Pieces (Gp)
-- 20 Electrum Pieces (Ep)
-- 100 Silver Pieces (Sp)
-- 1000 Copper pieces (Cp)
+</details>

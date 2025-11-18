@@ -2,7 +2,7 @@ import { TransactionForm } from "./components/TransactionForm";
 import { type Party } from "./models/party";
 import { type PartyMember } from "./models/partyMember";
 import { type Currency } from "./models/currency";
-import { transferCurrency } from "./utils/currency";
+import { addCurrency, transferCurrency } from "./utils/currency";
 import { createRoot } from "react-dom/client";
 import { useState } from "react";
 
@@ -33,8 +33,8 @@ export function App() {
   const [party, setParty] = useState(initialParty);
 
   function handleSubmitTransaction(formData: FormData) {
-    const fromWalletId = formData.get("fromWallet") as string;
-    const toWalletId = formData.get("toWallet") as string;
+    const type = formData.get("transactionType") as string;
+
     const amount: Currency = {
       platinum: Number(formData.get("platinum")),
       gold: Number(formData.get("gold")),
@@ -43,51 +43,90 @@ export function App() {
       copper: Number(formData.get("copper")),
     };
 
-    if (fromWalletId === toWalletId) {
-      alert("You cannot transfer to the same wallet.");
-      return;
-    }
+    if (type === "transfer") {
+      const fromWalletId = formData.get("fromWallet") as string;
+      const toWalletId = formData.get("toWallet") as string;
 
-    // 1. Deep Copy
-    const newParty = {
-      ...party,
-      treasury: { ...party.treasury },
-      members: party.members.map((member) => ({
-        ...member,
-        wallet: { ...member.wallet },
-      })),
-    };
+      if (fromWalletId === toWalletId) {
+        alert("You cannot transfer to the same wallet.");
+        return;
+      }
 
-    // 2. Find the actual wallet OBJECTS
-    let fromWallet: Currency | undefined;
-    if (fromWalletId === "treasury") {
-      fromWallet = newParty.treasury;
-    } else {
-      fromWallet = newParty.members.find((m) => m.id === fromWalletId)?.wallet;
-    }
+      // 1. Deep Copy
+      const newParty = {
+        ...party,
+        treasury: { ...party.treasury },
+        members: party.members.map((member) => ({
+          ...member,
+          wallet: { ...member.wallet },
+        })),
+      };
 
-    // Now do the same for the 'to' wallet
-    let toWallet: Currency | undefined;
-    if (toWalletId === "treasury") {
-      toWallet = newParty.treasury;
-    } else {
-      toWallet = newParty.members.find((m) => m.id === toWalletId)?.wallet;
-    }
+      // 2. Find the actual wallet OBJECTS
+      let fromWallet: Currency | undefined;
+      if (fromWalletId === "treasury") {
+        fromWallet = newParty.treasury;
+      } else {
+        fromWallet = newParty.members.find(
+          (m) => m.id === fromWalletId,
+        )?.wallet;
+      }
 
-    // 3. Make sure both wallets were found
-    if (!fromWallet || !toWallet) {
-      alert("Error: Could not find one of the wallets.");
-      return;
-    }
+      // Now do the same for the 'to' wallet
+      let toWallet: Currency | undefined;
+      if (toWalletId === "treasury") {
+        toWallet = newParty.treasury;
+      } else {
+        toWallet = newParty.members.find((m) => m.id === toWalletId)?.wallet;
+      }
 
-    // 4. Execute the transfer
-    const success = transferCurrency(fromWallet, toWallet, amount);
+      // 3. Make sure both wallets were found
+      if (!fromWallet || !toWallet) {
+        alert("Error: Could not find one of the wallets.");
+        return;
+      }
 
-    // 5. Update the state
-    if (success) {
-      setParty(newParty);
-    } else {
-      alert("Transfer failed! Insufficient funds.");
+      // 4. Execute the transfer
+      const success = transferCurrency(fromWallet, toWallet, amount);
+
+      // 5. Update the state
+      if (success) {
+        setParty(newParty);
+      } else {
+        alert("Transfer failed! Insufficient funds.");
+      }
+    } else if (type === "deposit") {
+      const toWalletId = formData.get("toWallet") as string;
+
+      const newParty = {
+        ...party,
+        treasury: { ...party.treasury },
+        members: party.members.map((member) => ({
+          ...member,
+          wallet: { ...member.wallet },
+        })),
+      };
+
+      let targetWallet: Currency | undefined;
+      if (toWalletId === "treasury") {
+        targetWallet = newParty.treasury;
+      } else {
+        targetWallet = newParty.members.find(
+          (m) => m.id === toWalletId,
+        )?.wallet;
+      }
+
+      if (!targetWallet) {
+        alert("Error: Could not find the wallet to deposit into.");
+        return;
+      }
+      const success = addCurrency(targetWallet, amount);
+
+      if (success) {
+        setParty(newParty);
+      } else {
+        alert("Deposit failed: invalid amount entered.");
+      }
     }
   }
 
