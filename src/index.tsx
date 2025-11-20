@@ -1,6 +1,6 @@
 import { TransactionForm } from "./components/TransactionForm";
 import { type Party } from "./models/party";
-import { type PartyMember } from "./models/partyMember";
+// import { type PartyMember } from "./models/partyMember";
 import { type Currency } from "./models/currency";
 import { addCurrency, transferCurrency } from "./utils/currency";
 import { createRoot } from "react-dom/client";
