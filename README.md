@@ -1,118 +1,122 @@
 # Dnd Party Funds Tracker
 
-One day while looting the now smoldering ruins of a circus (it was run by
-murderous vampiric clowns! it needed to be dismantled, I promise) my druid
-and her teammates came across a large sum of various riches. Delighted as we were, our group was not immediately eager to do the math needed to divide the
-loot between us.
+One day, while looting the now-smoldering ruins of a circus run by murderous vampiric clowns, my druid and her teammates came across a pile of riches large enough to create a new problem: how do you split loot fairly without doing a lot of math by hand?
 
-The purpose of this App is to allow dnd players to keep track of the
-collective net worth of their party (in currency, this app is not
-intended to track the many non-coin items a party may collect).
-There will exist a central pool of resources from which party members
-may draw and deposit different units of currency. Each transaction being logged
-with the party member associated with the exchange, for tracking purposes.
+This app is built to solve that exact problem for Dungeons & Dragons parties. It tracks a shared treasury, individual member wallets, and the movement of currency between them so the party can focus on adventuring instead of bookkeeping.
 
-Inspired by multi-user campaign managment sites like [DndBeyond](https://www.dndbeyond.com/) and [Scabard](https://www.scabard.com/pbs/), users will be
-able to create their party and add members. The individual party members will be eligable for claim by another user but would also be trackable without an
-active claim being necessary (let's assume the party manager — treasurer? — retains
-custody of unclaimed party members until otherwise handled).
+## Table of Contents
 
-To keep track of users and their actions I'll need authentication and profile handling. I'm looking into using **Google Cloud** services for managing such things on the backend.
+- [Dnd Party Funds Tracker](#dnd-party-funds-tracker)
+  - [Table of Contents](#table-of-contents)
+  - [Project Description](#project-description)
+  - [Usage / How It Works](#usage--how-it-works)
+  - [Development Progress](#development-progress)
+  - [Installation](#installation)
+  - [Tech Stack](#tech-stack)
+  - [Future Roadmap](#future-roadmap)
+  - [Author](#author)
 
-For now I'll be constructing something very basic using React and Typescript.
+## Project Description
 
-<details>
-<summary>Coin Conversion Rate</summary>
+This project was built to make party bookkeeping less tedious for tabletop campaigns while keeping the process thematic and easy to follow. Instead of manually tracking who holds what, the app keeps a simple `Party` object with a shared treasury and a set of party members, each with their own wallet.
 
-### Currency Rates
+It currently supports two core actions:
 
-> 1 Platinum piece (Pp) is equal to
+- transferring currency between wallets
+- depositing loot into a chosen wallet
 
-- 10 Gold Pieces (Gp)
-- 20 Electrum Pieces (Ep)
-- 100 Silver Pieces (Sp)
-- 1000 Copper pieces (Cp)
-</details>
+The app uses a simple in-memory state model for now, so it is best suited for local play, prototyping, or demonstrating the core finance workflow before backend features are added.
 
-### Data Models
+## Usage / How It Works
 
-The core data structure of the application is defined by the following TypeScript interfaces:
+When the app loads, it renders a sample party with a treasury and two members. The main state lives in `src/index.tsx`, and the `TransactionForm` component sends form data back to the app through a callback.
 
-- **`Currency`**: Represents a collection of all coin types.
-  - `platinum: number`
-  - `gold: number`
-  - `electrum: number`
-  - `silver: number`
-  - `copper: number`
+Currency handling is split into two helpers in `src/utils/currency.ts`:
 
-- **`PartyMember`**: Represents a single character in the party.
-  - `id: string`: A unique identifier for the member.
-  - `name: string`: The character's name.
-  - `wallet: Currency`: The member's personal funds.
-  - `imageUrl?: string`: An optional URL for a character portrait.
+- `transferCurrency(from, to, amount)` checks for sufficient funds before moving values between wallets.
+- `addCurrency(target, amount)` adds funds to a wallet and rejects negative values.
 
-- **`Party`**: Represents the entire adventuring party.
-  - `id: string`: A unique identifier for the party.
-  - `name: string`: The name of the party.
-  - `members: PartyMember[]`: An array containing all members of the party.
-  - `treasury: Currency`: The party's shared treasury.
+The form supports both transaction modes:
 
-### Necessary Functionality
+- Transfer: move currency from one wallet to another.
+- Deposit Loot: add currency directly to a selected wallet.
 
-#### Front-End (React)
+The app currently uses React state only. There is no authentication, persistence, or backend storage yet.
 
-The user interface will be built with several key components:
-
-- **`LoginForm`**: For user authentication.
-- **`AccountBalance`**: To display currency totals (for the party, the treasury, and individual members).
-- **`TransactionForm`**: To handle moving currency between the treasury and party members.
-- **`TransactionHistory`**: To show a log of all past transactions.
-
-State Management will be handled using React's built-in hooks like `useState` for simple component-level state. The UI will be styled using a framework like Bootstrap or Tailwind CSS.
-
-### Development Progress
+## Development Progress
 
 <details>
 
 <summary><b>Milestone 1: Core Logic and Initial UI</b></summary>
 
-- **Data Models Created**: Defined TypeScript interfaces for `Currency`, `PartyMember`, and `Party` to create a strong data structure.
-- **Currency Utility Function**: Implemented a robust `transferCurrency` function in `src/utils/currency.ts`. This function safely handles transfers between wallets and includes validation to prevent negative balances.
-- **React App Setup**:
-  - Initialized the main `App` component in `src/index.tsx`.
-  - Created sample data for a starting party.
-  - Used the `useState` hook to manage the entire party object as the application's state.
-- **Dynamic UI Rendering**:
-  - The `App` component now dynamically renders the party name, the treasury contents, and a list of all party members with their individual wallets.
-  - Used the `.map()` method to iterate over arrays and objects to generate JSX, a core pattern in React development.
-- **State Update Demonstration**:
-  - Added a test button and an event handler (`handleTestTransfer`) to demonstrate a state update.
-  - Clicking the button uses the `transferCurrency` utility to move funds and then calls `setParty` with a new, updated party object to trigger a re-render. This successfully demonstrates the full state management loop.
-- **Development Server**: Learned how to run the Vite development server with `npm run dev` to view and test the application in a browser.
+- Defined the core TypeScript models for `Currency`, `PartyMember`, and `Party`.
+- Built the `transferCurrency` helper in `src/utils/currency.ts` to move funds safely and prevent negative balances.
+- Set up the main React app in `src/index.tsx` with sample party data and `useState`-driven state management.
+- Rendered the treasury and member wallets dynamically from the party state.
+- Added an early test transfer flow to prove that state updates and re-renders worked correctly.
+
 </details>
 
 <details>
 
 <summary><b>Milestone 2: Building the Transaction Form</b></summary>
 
-- **Component Creation**: Created a new, reusable `TransactionForm` component in `src/components/TransactionForm.tsx`.
-- **Dynamic Form Content**: The form is not static; it accepts the list of party members via `props` and uses this data to dynamically generate "To" and "From" dropdown menus. This makes the form adaptable to any party size.
-- **Controlled Form Submission**: Implemented a `handleSubmit` function that prevents the default browser refresh and captures all user input using the `FormData` API.
-- **Lifting State Up**: Established a robust communication channel between the child `TransactionForm` and the parent `App` component.
-  - A handler function (`handleSubmitTransaction`) was created in `App` to process the form data.
-  - This function is passed down to `TransactionForm` as a prop (`onSubmitTransaction`).
-  - When the form is submitted, it calls the function from its props, effectively "lifting" the form data up to the parent component where the application state lives. This is a critical pattern for managing state in React.
-- **Edge Case Validation**: Identified and planned for the edge case where a user might try to transfer funds to and from the same wallet, ensuring more robust application logic.
+- Created a reusable `TransactionForm` component in `src/components/TransactionForm.tsx`.
+- Wired the form to generate wallet dropdowns from the current party members.
+- Used `FormData` on submit so the component could pass data upward cleanly.
+- Lifted transaction handling into the parent app through `onSubmitTransaction`.
+- Noted the edge case of transferring to the same wallet and handled it explicitly.
+
 </details>
 
 <details>
 
 <summary><b>Milestone 3: Implementing Full Transaction Logic</b></summary>
 
-- **Completed State Logic**: The `handleSubmitTransaction` function in `App.tsx` has been fully implemented. It now serves as the central processing unit for all transactions.
-- **Dynamic Wallet Selection**: The function correctly interprets the string IDs from the form's dropdowns to identify the appropriate source and destination wallets, whether it's the party treasury or a specific member's wallet.
-- **Robust Validation**: Implemented crucial validation checks within the handler, including preventing transfers to the same wallet and ensuring both source and destination wallets are found before attempting a transaction.
-- **Final State Update**: The handler now successfully uses the `transferCurrency` utility and, upon a successful transfer, updates the entire application state by calling `setParty` with the new party object. This makes the form fully interactive.
-- **Code Cleanup**: The original `handleTestTransfer` function and its corresponding button have been removed, as their functionality is now fully replaced by the complete `TransactionForm`. The `TransactionForm` component itself was also cleaned up to remove redundant logic.
+- Finished `handleSubmitTransaction` in `src/index.tsx` as the central transaction handler.
+- Added wallet lookup logic for both the treasury and individual party members.
+- Added validation for same-wallet transfers, missing wallets, and insufficient funds.
+- Updated the app state only after a successful transfer or deposit.
+- Removed the older test transfer button once the form handled the real workflow.
 
 </details>
+
+## Installation
+
+Prerequisite: Node.js 20 or newer is recommended.
+
+```bash
+git clone <repository-url>
+cd dnd-funds-tracker
+npm install
+npm run dev
+```
+
+Useful scripts:
+
+```bash
+npm run build
+npm run preview
+npm run lint
+npm run format
+```
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- Vite
+- ESLint
+- Prettier
+
+## Future Roadmap
+
+- transaction history and logging
+- user accounts and authentication
+- persistent storage for parties and members
+- richer UI styling and balance summaries
+- optional screenshots or a short demo video once the UI is finalized
+
+## Author
+
+Built by Torin Teale - SolarianVulpine
