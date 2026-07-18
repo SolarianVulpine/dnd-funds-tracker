@@ -86,7 +86,7 @@ The app currently uses React state only. There is no authentication, persistence
 Prerequisite: Node.js 20 or newer is recommended.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/SolarianVulpine/dnd-funds-tracker
 cd dnd-funds-tracker
 npm install
 npm run dev
